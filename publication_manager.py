@@ -9,7 +9,8 @@ publications_data = {
 }
 
 def generate_markdown():
-   markdown =     publications_data = {
+   markdown =    ""
+   publications_data = {
       "first_author": {
           "published": [
               {

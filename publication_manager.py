@@ -251,29 +251,51 @@ def generate_markdown():
    markdown += "*Note: Equal contribution indicated by asterisk (*)"
    return markdown
 
+
 def generate_html():
-   html = f"""
-   <!DOCTYPE html>
-   <html>
-   <head>
-       <title>Publications - Erika C. Freeman</title>
-       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-       <style>
-           .container {{ max-width: 800px; margin: 0 auto; padding: 20px; }}
-           a {{ color: #2962ff; text-decoration: none; }}
-           a:hover {{ text-decoration: underline; }}
-       </style>
-   </head>
-   <body>
-       <div class="container">
-           {generate_markdown()}
-           <footer>Last updated: {datetime.now().strftime('%Y-%m-%d')}</footer>
-       </div>
-   </body>
-   </html>
-   """
-   with open("index.html", "w") as f:
-       f.write(html)
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Publications - Erika C. Freeman</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+        <style>
+            body {{
+                font-family: 'Inter', sans-serif;
+                line-height: 1.6;
+                background: #f8f9fa;
+            }}
+            .container {{
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 40px 20px;
+                background: white;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }}
+            h1, h2, h3 {{
+                color: #2d3748;
+                margin-top: 2em;
+            }}
+            a {{
+                color: #4a5568;
+                text-decoration: none;
+                border-bottom: 1px solid #cbd5e0;
+            }}
+            a:hover {{
+                color: #2b6cb0;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            {generate_markdown()}
+            <footer>Last updated: {datetime.now().strftime('%Y-%m-%d')}</footer>
+        </div>
+    </body>
+    </html>
+    """
+    with open("index.html", "w") as f:
+        f.write(html)
 
 if __name__ == "__main__":
    generate_html()

@@ -1,10 +1,15 @@
-# publication_manager.py
 from datetime import datetime
 
+publications_data = {
+   "first_author": {
+       "published": [
+           # Your publications data here
+       ]
+   }
+}
+
 def generate_markdown():
-   markdown = "# PUBLICATIONS\n\n"
-   
-    publications_data = {
+   markdown =     publications_data = {
       "first_author": {
           "published": [
               {
@@ -170,39 +175,78 @@ def generate_markdown():
           ]
       }
     }
-
-
+   
    # First Author Publications
-   markdown += "## First Author Publications\n\n"
+   markdown += "## First Author Publications (11)\n\n"
    
    # Published
    markdown += "### Published\n"
    for pub in publications_data["first_author"]["published"]:
-       markdown += f"[{pub['title']}](https://doi.org/{pub['doi']}). *{pub['journal']}* {pub['year']}.\n"
+       if "doi" in pub:
+           markdown += f"[{pub['title']}](https://doi.org/{pub['doi']})"
+       else:
+           markdown += f"{pub['title']}"
+       markdown += f". *{pub['journal']}* {pub['year']}.\n"
        coauthors = "with " + ", ".join(pub['coauthors'])
-       if "equal_contribution" in pub and pub["equal_contribution"]:
-           coauthors += "*"
+       if "equal_contribution" in pub:
+           if isinstance(pub["equal_contribution"], list):
+               for author in pub["equal_contribution"]:
+                   coauthors = coauthors.replace(author, author + "*")
+           elif pub["equal_contribution"] is True:
+               coauthors += "*"
        markdown += f"{coauthors}\n\n"
-   
+
    # Under Review
    markdown += "### Under Review\n"
    for pub in publications_data["first_author"]["under_review"]:
-       title_text = f"{pub['title']}"
-       if "preprint" in pub and pub["preprint"]:
-           markdown += f"[{title_text}](https://doi.org/{pub['doi']}). *{pub['journal']}*. [preprint]\n"
+       title = pub['title']
+       if "doi" in pub and pub.get("preprint"):
+           markdown += f"[{title}](https://doi.org/{pub['doi']}). *{pub['journal']}*. [preprint]\n"
        else:
-           markdown += f"{title_text}. *{pub['journal']}*.\n"
+           markdown += f"{title}. *{pub['journal']}*.\n"
        markdown += f"with {', '.join(pub['coauthors'])}\n\n"
    
-   # Contributing Author Publications
-   markdown += "## Contributing Author Publications\n\n"
+   # In Preparation
+   markdown += "### In Advanced Preparation\n"
+   for pub in publications_data["first_author"]["in_preparation"]:
+       markdown += f"{pub['title']}"
+       if "journal" in pub:
+           markdown += f". [For *{pub['journal']}*]"
+       markdown += f"\nwith {', '.join(pub['coauthors'])}\n\n"
+
+   # Contributing Author 
+   markdown += "## Contributing Author Publications (12)\n\n"
+   
+   # Published
+   markdown += "### Published\n"
    for pub in publications_data["contributing_author"]["published"]:
-       markdown += f"[{pub['title']}](https://doi.org/{pub['doi']}). *{pub['journal']}* {pub['year']}.\n"
+       if "doi" in pub:
+           markdown += f"[{pub['title']}](https://doi.org/{pub['doi']})"
+       else:
+           markdown += pub['title']
+       markdown += f". *{pub['journal']}* {pub['year']}.\n"
        authors = pub['authors'].copy()
        author_index = authors.index("Freeman EC")
        authors[author_index] = "**Freeman EC**"
-       markdown += f"{', '.join(authors)}\n\n"
-   
+       authors_text = ", ".join(authors)
+       if "consortium" in pub:
+           authors_text += f", & {pub['consortium']}"
+       markdown += f"{authors_text}\n\n"
+
+   # In Preparation
+   markdown += "### In Advanced Preparation\n"
+   for pub in publications_data["contributing_author"]["in_preparation"]:
+       markdown += f"{pub['title']}"
+       if "journal" in pub:
+           markdown += f". [For *{pub['journal']}*]"
+       markdown += f"\n{', '.join(pub['authors'])}\n\n"
+
+   # Technical Reports
+   markdown += "## Technical Reports\n"
+   for report in publications_data["contributing_author"]["technical_reports"]:
+       markdown += f"{report['title']}. {report['type']}. {report['year']}.\n"
+       markdown += f"{', '.join(report['authors'])}\n\n"
+
    markdown += "*Note: Equal contribution indicated by asterisk (*)"
    return markdown
 
